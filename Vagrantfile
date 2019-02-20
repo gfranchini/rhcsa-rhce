@@ -10,7 +10,7 @@ Vagrant.configure(2) do |config|
   libvirt_storage_pool = "" # libVirt ONLY!
 
   # Memory configuration
-  classroom_memory = 2048 # Recommended: 2048 MiB / Minimum: 512 MiB
+  ipaserver_memory = 2048 # Recommended: 2048 MiB / Minimum: 512 MiB
   server_memory = 1024 # Recommended: 1024 MiB / Minimum: 512 MiB
   desktop_memory = 1024 # Recommended: 1024 MiB / Minimum: 512 MiB
   extra_disk_size = 2 # Recommended: 10 GiB / Minimum: 2 GiB
@@ -39,19 +39,19 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision :shell, path: "scripts/default-provision"
 
-  config.vm.define :classroom do |classroom_config|
-    classroom_config.vm.hostname = "classroom.example.com"
-    classroom_config.vm.network "private_network", ip: "172.25.0.254", auto_config: false
-    classroom_config.vm.provision :shell, run: "always", inline: "(nmcli device connect '#{devname}' &) && sleep 10 && nmcli con modify '#{conname}' ipv4.addresses 172.25.0.254/24 ipv4.dns 172.25.0.254,8.8.8.8 ipv4.route-metric 10 ipv4.method manual && nmcli con up '#{conname}'"
-    classroom_config.vm.provision :shell, path: "scripts/classroom-provision"
-    classroom_config.vm.provider "virtualbox" do |vbox, override|
-      vbox.name = classroom_config.vm.hostname
+  config.vm.define :ipaserver do |ipaserver_config|
+    ipaserver_config.vm.hostname = "ipaserver.example.com"
+    ipaserver_config.vm.network "private_network", ip: "172.25.0.254", auto_config: false
+    ipaserver_config.vm.provision :shell, run: "always", inline: "(nmcli device connect '#{devname}' &) && sleep 10 && nmcli con modify '#{conname}' ipv4.addresses 172.25.0.254/24 ipv4.dns 172.25.0.254,8.8.8.8 ipv4.route-metric 10 ipv4.method manual && nmcli con up '#{conname}'"
+    ipaserver_config.vm.provision :shell, path: "scripts/ipa-provision"
+    ipaserver_config.vm.provider "virtualbox" do |vbox, override|
+      vbox.name = ipaserver_config.vm.hostname
       vbox.cpus = 1
-      vbox.memory = classroom_memory
+      vbox.memory = ipaserver_memory
     end
-    classroom_config.vm.provider "libvirt" do |libvirt, override|
+    ipaserver_config.vm.provider "libvirt" do |libvirt, override|
       libvirt.cpus   = 1
-      libvirt.memory = classroom_memory
+      libvirt.memory = ipaserver_memory
     end
   end
 

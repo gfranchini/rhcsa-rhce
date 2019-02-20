@@ -9,10 +9,10 @@ User            | Password
 student (wheel) | student
 root            | redhat
 
-#### classroom.example.com
+#### ipaserver.example.com
 * ip: 172.25.0.254
-* ipa server: https://classroom.example.com
-* cert & keytabs: ftp://classroom.example.com
+* ipa server: https://ipaserver.example.com
+* cert & keytabs: ftp://ipaserver.example.com
     - server.keytab is configured for nfs and cifs
 * ipa administartor admin with password 'password'
 * ipa user lisa with password 'password'
@@ -39,19 +39,19 @@ root            | redhat
 
 ## Install
 
-To be able to access the ipa interface at `https://classroom.example.com` you will need to modify your hosts file:
+To be able to access the ipa interface at `https://ipaserver.example.com` you will need to modify your hosts file:
 
 ```
-echo '172.25.0.254 classroom.example.com classroom' >> /etc/hosts
+echo '172.25.0.254 ipaserver.example.com ipaserver' >> /etc/hosts
 ```
 
 Or else acces it via the GUI on the VM `desktop.example.com`
 
 Edit the `Vagrantfile` and modify `config.vm.box`.
 
-Also the following environment variables can be set instead of editing the `Vagrantfile`: `VBOX_VM_PATH`, `LIBVIRT_STORAGE_POOL` 
-  
-   
+Also the following environment variables can be set instead of editing the `Vagrantfile`: `VBOX_VM_PATH`, `LIBVIRT_STORAGE_POOL`
+
+
 ```
 cd rhel-lab
 vagrant up

@@ -8,7 +8,7 @@ yum install -y ipa-client chrony bash-completion bash-completion-extra
 systemctl enable chronyd
 systemctl start  chronyd
 
-while ! (echo > /dev/tcp/classroom/389) >/dev/null 2>&1; do
+while ! (echo > /dev/tcp/ipaserver/389) >/dev/null 2>&1; do
     echo "ipa server not ready yet - waiting for 10s"
     sleep 10
 done
