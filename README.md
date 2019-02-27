@@ -26,6 +26,14 @@ root            | redhat
 * with an extra 10 GiB unpartitioned drive
 * added as an ipa-client to the realm EXAMPLE.COM
 
+#### client.example.com
+* ip: 172.25.0.21
+* minimal server
+* with an extra NIC for teaming
+    - ip: 172.25.0.22
+* with an extra 10 GiB unpartitioned drive
+* added as an ipa-client to the realm EXAMPLE.COM
+
 #### desktop.example.com
 * ip: 172.25.0.10
 * with an extra 10 GiB unpartitioned drive

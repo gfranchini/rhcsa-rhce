@@ -77,6 +77,28 @@ Vagrant.configure(2) do |config|
     end
   end
 
+  config.vm.define :client do |client_config|
+    client_config.vm.hostname = "client.example.com"
+    client_config.vm.network "private_network", ip: "172.25.0.21", auto_config: false
+    client_config.vm.provision :shell, run: "always", inline: "(nmcli device connect '#{devname}' &) && sleep 10 && nmcli con modify '#{conname}' ipv4.addresses 172.25.0.21/24 ipv4.gateway 172.25.0.254 ipv4.dns 172.25.0.254 ipv4.route-metric 10 ipv4.method manual && nmcli con up '#{conname}'"
+    client_config.vm.network "private_network", ip: "172.25.0.22", auto_config: false
+    client_config.vm.provision :shell, path: "scripts/server-provision"
+    client_config.vm.provider "virtualbox" do |vbox, override|
+      vbox.name = client_config.vm.hostname
+      vbox.cpus = 1
+      vbox.memory = server_memory
+      if !File.exist?(vbox_vm_path + 'rhel_client_2.vdi')
+        vbox.customize ['createhd', '--filename', vbox_vm_path + 'rhel_client_2.vdi', '--variant', 'Fixed', '--size', extra_disk_size * 1024]
+      end
+      vbox.customize ['storageattach', :id,  '--storagectl', 'IDE', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', vbox_vm_path + 'rhel_client_2.vdi']
+    end
+    client_config.vm.provider "libvirt" do |libvirt, override|
+      libvirt.cpus   = 1
+      libvirt.memory = server_memory
+      libvirt.storage :file, :size => extra_disk_size.to_s + 'G'
+    end
+  end
+
   config.vm.define :desktop do |desktop_config|
     desktop_config.vm.hostname = "desktop.example.com"
     desktop_config.vm.network "private_network", ip: "172.25.0.10", auto_config: false
